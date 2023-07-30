@@ -1,7 +1,7 @@
 package account.controllers;
 
 import account.dto.RegisterDto;
-import account.exceptions.UserAlreadyExistException;
+import account.exceptions.UserExistException;
 import account.models.Role;
 import account.models.UserEntity;
 import account.repository.RoleRepository;
@@ -12,11 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
@@ -41,7 +37,7 @@ public class AuthController {
     @PostMapping("signup")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto) {
         if (userRepository.existsByUsername(registerDto.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"User exist!");
+            throw new UserExistException("User exist!");
         }
         UserEntity user = new UserEntity();
         user.setUsername(registerDto.getUsername());
@@ -56,4 +52,5 @@ public class AuthController {
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
 }
