@@ -30,14 +30,15 @@ public class UserService  {
     }
 
     public ResponseEntity<?> register(RegisterRequest request) {
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new CustomBadRequestException("User exists!");
+        String email = request.getEmail().toLowerCase();
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new CustomBadRequestException("User exist!");
         }
 
         User user = new User();
         user.setName(request.getName());
         user.setLastname(request.getLastname());
-        user.setEmail(request.getEmail());
+        user.setEmail(email);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoles(new ArrayList<>(Set.of(roleRepository.findByName("USER").orElseThrow())));
 
