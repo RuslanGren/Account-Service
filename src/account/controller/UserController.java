@@ -5,10 +5,7 @@ import account.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -25,6 +22,9 @@ public class UserController {
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         return userService.register(request);
     }
+
+    @GetMapping("/empl/payment")
+    public ResponseEntity<?> payment(@RequestParam String username, @RequestParam String password) {
+        return userService.payment(username, password);
+    }
 }
-
-
