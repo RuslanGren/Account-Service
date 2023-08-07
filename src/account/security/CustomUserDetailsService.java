@@ -1,4 +1,4 @@
-package account.service;
+package account.security;
 
 import account.models.User;
 import account.repository.UserRepository;
@@ -15,9 +15,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email.toLowerCase());
+
         return user.map(UserInfo::new).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

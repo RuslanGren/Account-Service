@@ -29,9 +29,5 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'com.h2database:h2:2.0.202'
     implementation 'org.postgresql:postgresql'
-
-    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '6.1.0.Final'
-    implementation 'org.projectlombok:lombok:1.18.22'
 }
