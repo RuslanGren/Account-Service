@@ -1,6 +1,6 @@
 package account.service;
 
-import account.exceptions.UserExistException;
+import account.exceptions.CustomBadRequestException;
 import account.exceptions.UserNotFoundException;
 import account.models.RegisterRequest;
 import account.models.User;
@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -30,10 +31,25 @@ public class UserService  {
         this.passwordEncoder = passwordEncoder;
     }
 
+    private void checkPass(String pass) {
+        Set<String> breachedPasswords = Set.of("PasswordForJanuary", "PasswordForFebruary",
+                "PasswordForMarch", "PasswordForApril", "PasswordForMay", "PasswordForJune",
+                "PasswordForJuly", "PasswordForAugust", "PasswordForSeptember", "PasswordForOctober",
+                "PasswordForNovember", "PasswordForDecember");
+
+        if (pass.length() < 12) {
+            throw new CustomBadRequestException("The password length must be at least 12 chars!");
+        }
+
+        if (breachedPasswords.contains(pass)) {
+            throw new CustomBadRequestException("The password is in the hacker's database!");
+        }
+    }
+
     public ResponseEntity<?> register(RegisterRequest request) {
         String email = request.getEmail().toLowerCase();
         if (userRepository.findByEmail(email).isPresent()) {
-            throw new UserExistException();
+            throw new CustomBadRequestException("User exist!");
         }
 
         User user = new User();
@@ -52,5 +68,18 @@ public class UserService  {
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> changePass(UserDetails userDetails, String new_password) {
+        checkPass(new_password);
+
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
+        new_password = passwordEncoder.encode(new_password);
+
+        if (!passwordEncoder.matches(new_password, user.getPassword())) {
+            throw new CustomBadRequestException("The passwords must be different!");
+        }
+
+
     }
 }

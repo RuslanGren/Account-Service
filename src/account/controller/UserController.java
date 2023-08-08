@@ -29,4 +29,10 @@ public class UserController {
     public ResponseEntity<?> payment(@AuthenticationPrincipal UserDetails userDetails) {
         return userService.payment(userDetails);
     }
+
+    @PostMapping("/auth/changepass")
+    public ResponseEntity<?> changePass(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String new_password) {
+        return userService.changePass(userDetails, new_password);
+    }
+
 }
