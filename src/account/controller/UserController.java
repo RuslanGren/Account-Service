@@ -1,8 +1,11 @@
 package account.controller;
 
+import account.models.ChangePassRequest;
 import account.models.RegisterRequest;
 import account.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,8 +34,9 @@ public class UserController {
     }
 
     @PostMapping("/auth/changepass")
-    public ResponseEntity<?> changePass(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String new_password) {
-        return userService.changePass(userDetails, new_password);
+    public ResponseEntity<?> changePass(@RequestBody ChangePassRequest request,
+                                        @AuthenticationPrincipal UserDetails userDetails) {
+        return userService.changePass(userDetails, request);
     }
 
 }

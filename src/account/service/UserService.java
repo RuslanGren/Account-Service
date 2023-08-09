@@ -2,6 +2,7 @@ package account.service;
 
 import account.exceptions.CustomBadRequestException;
 import account.exceptions.UserNotFoundException;
+import account.models.ChangePassRequest;
 import account.models.RegisterRequest;
 import account.models.User;
 import account.repository.RoleRepository;
@@ -14,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -32,14 +33,14 @@ public class UserService  {
     }
 
     private void checkPass(String pass) {
+        if (pass.length() < 12) {
+            throw new CustomBadRequestException("Password length must be 12 chars minimum!");
+        }
+
         Set<String> breachedPasswords = Set.of("PasswordForJanuary", "PasswordForFebruary",
                 "PasswordForMarch", "PasswordForApril", "PasswordForMay", "PasswordForJune",
                 "PasswordForJuly", "PasswordForAugust", "PasswordForSeptember", "PasswordForOctober",
                 "PasswordForNovember", "PasswordForDecember");
-
-        if (pass.length() < 12) {
-            throw new CustomBadRequestException("The password length must be at least 12 chars!");
-        }
 
         if (breachedPasswords.contains(pass)) {
             throw new CustomBadRequestException("The password is in the hacker's database!");
@@ -51,6 +52,8 @@ public class UserService  {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new CustomBadRequestException("User exist!");
         }
+
+        checkPass(request.getPassword()); // check valid of pass if false throw exception
 
         User user = new User();
         user.setName(request.getName());
@@ -70,16 +73,19 @@ public class UserService  {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> changePass(UserDetails userDetails, String new_password) {
-        checkPass(new_password);
+    public ResponseEntity<?> changePass(UserDetails userDetails, ChangePassRequest request) {
+        checkPass(request.getPassword());
 
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
-        new_password = passwordEncoder.encode(new_password);
 
-        if (!passwordEncoder.matches(new_password, user.getPassword())) {
+        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomBadRequestException("The passwords must be different!");
         }
 
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepository.save(user);
 
+        return new ResponseEntity<>(Map.of("email", userDetails.getUsername(),
+                "status", "The password has been updated successfully"), HttpStatus.OK);
     }
 }
