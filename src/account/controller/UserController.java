@@ -1,11 +1,9 @@
 package account.controller;
 
-import account.models.ChangePassRequest;
-import account.models.RegisterRequest;
+import account.models.user.ChangePassRequest;
+import account.models.user.RegisterRequest;
 import account.service.UserService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

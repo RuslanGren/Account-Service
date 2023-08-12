@@ -1,4 +1,4 @@
-package account.models;
+package account.models.user;
 
 import jakarta.persistence.*;
 @Entity

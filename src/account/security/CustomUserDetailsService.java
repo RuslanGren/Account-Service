@@ -1,6 +1,6 @@
 package account.security;
 
-import account.models.User;
+import account.models.user.User;
 import account.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

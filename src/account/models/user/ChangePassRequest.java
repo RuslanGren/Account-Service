@@ -1,4 +1,4 @@
-package account.models;
+package account.models.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Pattern;

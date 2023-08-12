@@ -1,7 +1,7 @@
 package account.security;
 
-import account.models.Role;
-import account.models.User;
+import account.models.user.Role;
+import account.models.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -2,9 +2,9 @@ package account.service;
 
 import account.exceptions.CustomBadRequestException;
 import account.exceptions.UserNotFoundException;
-import account.models.ChangePassRequest;
-import account.models.RegisterRequest;
-import account.models.User;
+import account.models.user.ChangePassRequest;
+import account.models.user.RegisterRequest;
+import account.models.user.User;
 import account.repository.RoleRepository;
 import account.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
