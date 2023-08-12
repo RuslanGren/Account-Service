@@ -12,7 +12,8 @@ public class Employee {
     private long id;
 
     @ManyToOne
-    private User employeeId;
+    @JoinColumn(name = "employee_id")
+    private User employee;
 
     private String period;
 
@@ -21,9 +22,9 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(long id, User employeeId, String period, long salary) {
+    public Employee(long id, User employee, String period, long salary) {
         this.id = id;
-        this.employeeId = employeeId;
+        this.employee = employee;
         this.period = period;
         this.salary = salary;
     }
@@ -36,12 +37,12 @@ public class Employee {
         this.id = id;
     }
 
-    public User getEmployeeId() {
-        return employeeId;
+    public User getEmployee() {
+        return employee;
     }
 
-    public void setEmployeeId(User employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployee(User employee) {
+        this.employee = employee;
     }
 
     public String getPeriod() {

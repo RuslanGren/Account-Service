@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/empl/payment").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/auth/changepass").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/acct/payments").permitAll()
                         .requestMatchers(HttpMethod.POST, "/actuator/shutdown").permitAll()
                         .anyRequest().permitAll())
                 .sessionManagement()

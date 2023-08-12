@@ -5,12 +5,12 @@ public class EmployeeRequest {
 
     private String period;
 
-    private int salary;
+    private long salary;
 
     public EmployeeRequest() {
     }
 
-    public EmployeeRequest(String employee, String period, int salary) {
+    public EmployeeRequest(String employee, String period, long salary) {
         this.employee = employee;
         this.period = period;
         this.salary = salary;
@@ -32,11 +32,11 @@ public class EmployeeRequest {
         this.period = period;
     }
 
-    public int getSalary() {
+    public long getSalary() {
         return salary;
     }
 
-    public void setSalary(int salary) {
+    public void setSalary(long salary) {
         this.salary = salary;
     }
 }
