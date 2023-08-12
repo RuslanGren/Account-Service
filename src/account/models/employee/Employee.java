@@ -1,15 +1,18 @@
 package account.models.employee;
 
+import account.models.user.User;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "employees")
 public class Employee {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
+    @ManyToOne
+    private User employeeId;
 
     private String period;
 
@@ -18,9 +21,9 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(long id, String name, String period, long salary) {
+    public Employee(long id, User employeeId, String period, long salary) {
         this.id = id;
-        this.name = name;
+        this.employeeId = employeeId;
         this.period = period;
         this.salary = salary;
     }
@@ -33,12 +36,12 @@ public class Employee {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public User getEmployeeId() {
+        return employeeId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEmployeeId(User employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getPeriod() {
