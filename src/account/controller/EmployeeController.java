@@ -1,6 +1,5 @@
 package account.controller;
 
-import account.models.employee.Employee;
 import account.models.employee.EmployeeRequest;
 import account.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
