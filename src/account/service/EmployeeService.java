@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -36,7 +37,9 @@ public class EmployeeService {
             User user = userRepository.findByEmail(request.getEmployee())
                     .orElseThrow(() -> new CustomBadRequestException("User not found!"));
 
-            if (employeeRepository.findByEmployeeIdAndPeriod(user, request.getPeriod()).isPresent()) {
+            Optional<Employee> exist = employeeRepository.findByEmployeeAndPeriod(user, request.getPeriod());
+
+            if (exist.isPresent()) {
                 throw new CustomBadRequestException("Payment data exist!");
             }
 
@@ -49,6 +52,10 @@ public class EmployeeService {
         }
 
         return new ResponseEntity<>(Map.of("status", "Added successfully!"), HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> updatePayment(EmployeeRequest request) {
+
     }
 
     public void checkEmployeeRequest(EmployeeRequest employeeRequest) {
