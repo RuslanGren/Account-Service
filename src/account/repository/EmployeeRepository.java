@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByEmployeeAndPeriod(User employee, String period);
 
-    Optional<ArrayList<Employee>> findByEmployee (User employee);
+    ArrayList<Employee> findByEmployeeOrderByIdDesc (User employee);
 }

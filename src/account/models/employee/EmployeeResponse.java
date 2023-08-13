@@ -32,7 +32,7 @@ public class EmployeeResponse {
     }
 
     private static String convertSalary(long salary) {
-        return String.format("%d dollars(s) %d cent(s)", salary / 100, salary % 100);
+        return String.format("%d dollar(s) %d cent(s)", salary / 100, salary % 100);
     }
 
     private static String convertPeriod(String inputPeriod) {
