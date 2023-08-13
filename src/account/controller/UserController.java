@@ -26,11 +26,6 @@ public class UserController {
         return userService.register(request);
     }
 
-    @GetMapping("/empl/payment")
-    public ResponseEntity<?> payment(@AuthenticationPrincipal UserDetails userDetails) {
-        return userService.payment(userDetails);
-    }
-
     @PostMapping("/auth/changepass")
     public ResponseEntity<?> changePass(@RequestBody ChangePassRequest request,
                                         @AuthenticationPrincipal UserDetails userDetails) {

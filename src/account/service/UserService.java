@@ -67,12 +67,6 @@ public class UserService  {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> payment(UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
     public ResponseEntity<?> changePass(UserDetails userDetails, ChangePassRequest request) {
         checkPass(request.getPassword());
 

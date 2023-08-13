@@ -1,6 +1,7 @@
 package account.service;
 
 import account.exceptions.CustomBadRequestException;
+import account.models.employee.EmployeeResponse;
 import account.models.user.User;
 import account.models.employee.Employee;
 import account.models.employee.EmployeeRequest;
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -66,7 +68,7 @@ public class EmployeeService {
         return new ResponseEntity<>(Map.of("status", "Updated successfully!"), HttpStatus.OK);
     }
 
-    public void checkEmployeeRequest(EmployeeRequest employeeRequest) {
+    private void checkEmployeeRequest(EmployeeRequest employeeRequest) {
         String regexpPeriod = "^((0[1-9])|[1-9]|1[0-2])-(19|20)[0-9]{2}$";
 
         if (!employeeRequest.getPeriod().matches(regexpPeriod)) {
@@ -77,6 +79,17 @@ public class EmployeeService {
             throw new CustomBadRequestException("Salary must be non negative!");
         }
 
+    }
+
+    public ResponseEntity<?> getPayment(String period, UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new CustomBadRequestException("User not found!"));
+
+        Employee employee = employeeRepository.findByEmployeeAndPeriod(user, period)
+                .orElseThrow(() -> new CustomBadRequestException("Employee not found!"));
+
+        return new ResponseEntity<>(new EmployeeResponse(user.getName(), user.getLastname(),
+                employee.getPeriod(), employee.getSalary()), HttpStatus.OK);
     }
 
 }

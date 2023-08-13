@@ -4,6 +4,8 @@ import account.models.employee.EmployeeRequest;
 import account.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -27,6 +29,11 @@ public class EmployeeController {
     @PutMapping("/acct/payments")
     public ResponseEntity<?> payments(@RequestBody EmployeeRequest employeeRequest) {
         return employeeService.updatePayment(employeeRequest);
+    }
+
+    @GetMapping("/empl/payment")
+    public ResponseEntity<?> getPayment(@RequestParam String period, @AuthenticationPrincipal UserDetails userDetails) {
+        return employeeService.getPayment(period, userDetails);
     }
 
 }
