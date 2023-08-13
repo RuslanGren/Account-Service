@@ -15,7 +15,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
@@ -81,7 +83,7 @@ public class EmployeeService {
 
     }
 
-    public ResponseEntity<?> getPayment(String period, UserDetails userDetails) {
+    public ResponseEntity<?> getPaymentByPeriod(String period, UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new CustomBadRequestException("User not found!"));
 
@@ -90,6 +92,22 @@ public class EmployeeService {
 
         return new ResponseEntity<>(new EmployeeResponse(user.getName(), user.getLastname(),
                 employee.getPeriod(), employee.getSalary()), HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> getPayment(UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new CustomBadRequestException("User not found!"));
+
+        List<Employee> employees = employeeRepository.findByEmployee(user)
+                .orElseThrow(() -> new CustomBadRequestException("Employee not found!"));
+
+
+        List<EmployeeResponse> result = employees.stream()
+                .map(employee -> new EmployeeResponse(user.getName(), user.getLastname(),
+                        employee.getPeriod(), employee.getSalary()))
+                .toList();
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

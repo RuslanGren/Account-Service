@@ -22,18 +22,24 @@ public class EmployeeController {
     }
 
     @PostMapping("/acct/payments")
-    public ResponseEntity<?> payments(@RequestBody ArrayList<EmployeeRequest> employees) {
+    public ResponseEntity<?> postPayments(@RequestBody ArrayList<EmployeeRequest> employees) {
         return employeeService.addPayments(employees);
     }
 
     @PutMapping("/acct/payments")
-    public ResponseEntity<?> payments(@RequestBody EmployeeRequest employeeRequest) {
+    public ResponseEntity<?> putPayment(@RequestBody EmployeeRequest employeeRequest) {
         return employeeService.updatePayment(employeeRequest);
     }
 
-    @GetMapping("/empl/payment")
-    public ResponseEntity<?> getPayment(@RequestParam String period, @AuthenticationPrincipal UserDetails userDetails) {
-        return employeeService.getPayment(period, userDetails);
+    @GetMapping(value = "/empl/payment", params = "period")
+    public ResponseEntity<?> getPaymentByPeriod(@RequestParam String period,
+                                                @AuthenticationPrincipal UserDetails userDetails) {
+        return employeeService.getPaymentByPeriod(period, userDetails);
+    }
+
+    @GetMapping(value = "/empl/payment")
+    public ResponseEntity<?> getPayment(@AuthenticationPrincipal UserDetails userDetails) {
+        return employeeService.getPayment(userDetails);
     }
 
 }

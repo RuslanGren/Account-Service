@@ -1,8 +1,7 @@
 package account.models.employee;
 
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -33,15 +32,15 @@ public class EmployeeResponse {
     }
 
     private static String convertSalary(long salary) {
-        return String.format("%s dollars(s) %s cent(s)", salary / 100, salary % 100);
+        return String.format("%d dollars(s) %d cent(s)", salary / 100, salary % 100);
     }
 
     private static String convertPeriod(String inputPeriod) {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MM-yyyy");
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMMM-yyyy", Locale.ENGLISH);
+        YearMonth yearMonth = YearMonth.parse(inputPeriod, inputFormatter);
 
-        LocalDate date = LocalDate.parse(inputPeriod + "-01", inputFormatter);
-        return date.format(outputFormatter);
+        return outputFormatter.format(yearMonth);
     }
 
     public String getName() {
