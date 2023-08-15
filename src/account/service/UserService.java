@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -72,7 +71,7 @@ public class UserService  {
 
         userRepository.save(user);
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(user.returnUserResponse(), HttpStatus.OK);
     }
 
     public ResponseEntity<?> changePass(UserDetails userDetails, ChangePassRequest request) {

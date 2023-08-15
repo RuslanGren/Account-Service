@@ -3,7 +3,6 @@ package account.models.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,7 +10,7 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private String name;
@@ -28,17 +27,13 @@ public class User {
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     public User() {
     }
 
-    public User(String name, String lastname, String email, String password, Set<Role> roles) {
-        this.name = name;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-        this.roles = roles;
+    public UserResponse returnUserResponse() {
+        return new UserResponse(getId(), getName(), getLastname(), getEmail(), getRoles());
     }
 
     public long getId() {

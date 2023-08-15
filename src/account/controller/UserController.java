@@ -27,7 +27,7 @@ public class UserController {
         return userService.register(request);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ACCOUNTANT', 'ROLE_ADMINISTRATOR')")
     @PostMapping("/auth/changepass")
     public ResponseEntity<?> changePass(@RequestBody ChangePassRequest request,
                                         @AuthenticationPrincipal UserDetails userDetails) {
