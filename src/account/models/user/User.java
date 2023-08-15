@@ -3,8 +3,8 @@ package account.models.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -28,13 +28,12 @@ public class User {
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    @JsonIgnore
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
 
-    public User(String name, String lastname, String email, String password, List<Role> roles) {
+    public User(String name, String lastname, String email, String password, Set<Role> roles) {
         this.name = name;
         this.lastname = lastname;
         this.email = email;
@@ -82,11 +81,11 @@ public class User {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 }

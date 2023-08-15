@@ -6,6 +6,7 @@ import account.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ public class UserController {
         return userService.register(request);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     @PostMapping("/auth/changepass")
     public ResponseEntity<?> changePass(@RequestBody ChangePassRequest request,
                                         @AuthenticationPrincipal UserDetails userDetails) {

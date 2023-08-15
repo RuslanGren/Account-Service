@@ -4,6 +4,7 @@ import account.exceptions.CustomBadRequestException;
 import account.exceptions.UserNotFoundException;
 import account.models.user.ChangePassRequest;
 import account.models.user.RegisterRequest;
+import account.models.user.Role;
 import account.models.user.User;
 import account.repository.RoleRepository;
 import account.repository.UserRepository;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -48,8 +50,14 @@ public class UserService  {
     }
 
     public ResponseEntity<?> register(RegisterRequest request) {
-        String email = request.getEmail().toLowerCase();
-        if (userRepository.findByEmail(email).isPresent()) {
+        Set<Role> roles = new HashSet<>();
+        if (userRepository.findAll().isEmpty()) {
+            roles.add(roleRepository.findByName("ADMINISTRATOR"));
+        } else {
+            roles.add(roleRepository.findByName("USER"));
+        }
+
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new CustomBadRequestException("User exist!");
         }
 
@@ -58,9 +66,9 @@ public class UserService  {
         User user = new User();
         user.setName(request.getName());
         user.setLastname(request.getLastname());
-        user.setEmail(email);
+        user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRoles(new ArrayList<>(Set.of(roleRepository.findByName("USER").orElseThrow())));
+        user.setRoles(roles);
 
         userRepository.save(user);
 
