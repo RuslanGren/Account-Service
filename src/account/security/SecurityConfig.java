@@ -38,9 +38,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/empl/payment").hasAnyRole("USER", "ACCOUNTANT")
                         .requestMatchers(HttpMethod.POST, "/api/acct/payments").hasAnyRole("ACCOUNTANT")
                         .requestMatchers(HttpMethod.PUT, "/api/acct/payments").hasAnyRole("ACCOUNTANT")
-                        .requestMatchers(HttpMethod.GET, "/api/admin/user").hasAnyRole("ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.DELETE, "/api/admin/user").hasAnyRole("ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.PUT, "/api/admin/user/role").hasAnyRole("ADMINISTRATOR")
+                        .requestMatchers("/api/admin/**").hasAnyRole("ADMINISTRATOR")
                         .requestMatchers(HttpMethod.POST, "/actuator/shutdown").permitAll() // for tests
                         .anyRequest().permitAll())
                 .sessionManagement()

@@ -36,7 +36,7 @@ public class EmployeeService {
         for (EmployeeRequest request : requests) {
             checkEmployeeRequest(request); // throw exception if something is wrong
 
-            User user = userRepository.findByEmail(request.getEmployee())
+            User user = userRepository.findByEmailIgnoreCase(request.getEmployee())
                     .orElseThrow(() -> new CustomBadRequestException("User not found!"));
 
             if (employeeRepository.findByEmployeeAndPeriod(user, request.getPeriod()).isPresent()) {
@@ -57,7 +57,7 @@ public class EmployeeService {
     public ResponseEntity<?> updatePayment(EmployeeRequest request) {
         checkEmployeeRequest(request); // throw exception if something is wrong
 
-        User user = userRepository.findByEmail(request.getEmployee())
+        User user = userRepository.findByEmailIgnoreCase(request.getEmployee())
                 .orElseThrow(() -> new CustomBadRequestException("User not found!"));
 
         Employee employee = employeeRepository.findByEmployeeAndPeriod(user, request.getPeriod())
@@ -83,7 +83,7 @@ public class EmployeeService {
     }
 
     public ResponseEntity<?> getPaymentByPeriod(String period, UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
+        User user = userRepository.findByEmailIgnoreCase(userDetails.getUsername())
                 .orElseThrow(() -> new CustomBadRequestException("User not found!"));
 
         Employee employee = employeeRepository.findByEmployeeAndPeriod(user, period)
@@ -94,7 +94,7 @@ public class EmployeeService {
     }
 
     public ResponseEntity<?> getPayment(UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
+        User user = userRepository.findByEmailIgnoreCase(userDetails.getUsername())
                 .orElseThrow(() -> new CustomBadRequestException("User not found!"));
 
         List<Employee> employees = employeeRepository.findByEmployeeOrderByIdDesc(user);

@@ -17,14 +17,19 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    @GetMapping(value = "/user")
+    @GetMapping(value = "/user/")
     public ResponseEntity<?> getUsers() {
         return adminService.getUsers();
     }
 
-    @DeleteMapping(value = "/user/{email}")
-    public ResponseEntity<?> deleteUser(@PathVariable String email) {
-        return adminService.deleteUser(email);
+    @DeleteMapping(value = "/user/{userEmail}")
+    public ResponseEntity<?> deleteUser(@PathVariable String userEmail) {
+        return adminService.deleteUser(userEmail);
+    }
+
+    @DeleteMapping("/user/")
+    public ResponseEntity<?> deleteUsers() {
+        return adminService.deleteUsers();
     }
 
     @PutMapping("/user/role")

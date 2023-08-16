@@ -50,14 +50,16 @@ public class UserService  {
     }
 
     public ResponseEntity<?> register(RegisterRequest request) {
+        String email = request.getEmail().toLowerCase();
         Set<Role> roles = new HashSet<>();
+
         if (userRepository.findAll().isEmpty()) {
             roles.add(roleRepository.findByName("ROLE_ADMINISTRATOR"));
         } else {
             roles.add(roleRepository.findByName("ROLE_USER"));
         }
 
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+        if (userRepository.findByEmailIgnoreCase(email).isPresent()) {
             throw new CustomBadRequestException("User exist!");
         }
 
@@ -66,7 +68,7 @@ public class UserService  {
         User user = new User();
         user.setName(request.getName());
         user.setLastname(request.getLastname());
-        user.setEmail(request.getEmail());
+        user.setEmail(email);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoles(roles);
 
@@ -78,7 +80,7 @@ public class UserService  {
     public ResponseEntity<?> changePass(UserDetails userDetails, ChangePassRequest request) {
         checkPass(request.getPassword());
 
-        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmailIgnoreCase(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
 
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomBadRequestException("The passwords must be different!");

@@ -39,7 +39,7 @@ public class AdminService {
     }
 
     public ResponseEntity<?> deleteUser(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(UserNotFoundException::new);
 
         if (user.getRoles().contains(roleRepository.findByName("ROLE_ADMINISTRATOR"))) {
             throw new CustomBadRequestException("Can't remove ADMINISTRATOR role!");
@@ -50,9 +50,14 @@ public class AdminService {
         return new ResponseEntity<>(Map.of("user", email, "status", "Deleted successfully!"), HttpStatus.OK);
     }
 
+    public ResponseEntity<?> deleteUsers() {
+        userRepository.deleteAll();
+        return new ResponseEntity<>(Map.of("status", "Deleted successfully!"), HttpStatus.OK);
+    }
+
     public ResponseEntity<?> changeRole(ChangeRoleRequest changeRoleRequest) {
 
-        User user = userRepository.findByEmail(changeRoleRequest.getEmail()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmailIgnoreCase(changeRoleRequest.getUser()).orElseThrow(UserNotFoundException::new);
 
         Role role = roleRepository.findByName("ROLE_" + changeRoleRequest.getRole());
         if (role == null) {
@@ -78,7 +83,8 @@ public class AdminService {
             updatedRoles.remove(role); // remove role
 
         } else if (changeRoleRequest.getOperation().equals("GRANT")) {
-            if (role.getName().equals("ROLE_ADMINISTRATOR")) {
+            if (user.getRoles().contains(roleRepository.findByName("ROLE_ADMINISTRATOR"))
+                    || role.getName().equals("ROLE_ADMINISTRATOR")) {
                 throw new CustomBadRequestException("The user cannot combine administrative and business roles!");
             }
 
