@@ -51,9 +51,9 @@ public class UserService  {
     public ResponseEntity<?> register(RegisterRequest request) {
         Set<Role> roles = new HashSet<>();
         if (userRepository.findAll().isEmpty()) {
-            roles.add(roleRepository.findByName("ADMINISTRATOR"));
+            roles.add(roleRepository.findByName("ROLE_ADMINISTRATOR"));
         } else {
-            roles.add(roleRepository.findByName("USER"));
+            roles.add(roleRepository.findByName("ROLE_USER"));
         }
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {

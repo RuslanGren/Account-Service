@@ -2,6 +2,7 @@ package account.models.user;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class UserResponse {
     private long id;
@@ -22,10 +23,7 @@ public class UserResponse {
         this.name = name;
         this.lastname = lastname;
         this.email = email;
-
-        for (Role role : roles) {
-            this.roles.add("ROLE_" + role.getName());
-        }
+        this.roles = roles.stream().map(Role::getName).collect(Collectors.toSet());
     }
 
     public long getId() {
