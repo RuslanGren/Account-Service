@@ -60,7 +60,6 @@ public class AdminService {
         Set<Role> updatedRoles = new HashSet<>(user.getRoles());
 
         if (changeRoleRequest.getOperation().equals("REMOVE")) {
-
             if (role.getName().equals("ROLE_ADMINISTRATOR")) {
                 throw new CustomBadRequestException("Can't remove ADMINISTRATOR role!");
             }
@@ -73,13 +72,23 @@ public class AdminService {
                 throw new CustomBadRequestException("The user must have at least one role!");
             }
 
-            updatedRoles.remove(role);
-            user.setRoles(updatedRoles);
+            updatedRoles.remove(role); // remove role
+
+        } else if (changeRoleRequest.getOperation().equals("GRANT")) {
+            if (role.getName().equals("ROLE_ADMINISTRATOR")) {
+                throw new CustomBadRequestException("The user cannot combine administrative and business roles!");
+            }
+
+            updatedRoles.add(role); // add new role
+
+        } else {
+            throw new CustomBadRequestException("Wrong operation!");
         }
 
+        user.setRoles(updatedRoles);
+        userRepository.save(user);
 
-
-
+        return new ResponseEntity<>(user.returnUserResponse(), HttpStatus.OK);
     }
 
 }

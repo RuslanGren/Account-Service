@@ -39,6 +39,4 @@ public class AdminController {
         return adminService.changeRole(changeRoleRequest);
     }
 
-
-
 }
