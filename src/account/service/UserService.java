@@ -1,6 +1,7 @@
 package account.service;
 
 import account.exceptions.CustomBadRequestException;
+import account.exceptions.RoleNotFoundException;
 import account.exceptions.UserNotFoundException;
 import account.models.user.ChangePassRequest;
 import account.models.user.RegisterRequest;
