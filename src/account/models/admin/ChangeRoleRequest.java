@@ -1,7 +1,7 @@
 package account.models.admin;
 
 public class ChangeRoleRequest {
-    private String user;
+    private String email;
 
     private String role;
 
@@ -10,12 +10,12 @@ public class ChangeRoleRequest {
     public ChangeRoleRequest() {
     }
 
-    public String getUser() {
-        return user;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getRole() {

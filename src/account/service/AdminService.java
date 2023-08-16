@@ -1,6 +1,7 @@
 package account.service;
 
 import account.exceptions.CustomBadRequestException;
+import account.exceptions.RoleNotFoundException;
 import account.exceptions.UserNotFoundException;
 import account.models.admin.ChangeRoleRequest;
 import account.models.user.Role;
@@ -50,22 +51,24 @@ public class AdminService {
     }
 
     public ResponseEntity<?> changeRole(ChangeRoleRequest changeRoleRequest) {
-        User user = userRepository.findByEmail(changeRoleRequest.getUser()).orElseThrow(UserNotFoundException::new);
 
-        Role role = roleRepository.findByName(changeRoleRequest.getRole());
+        User user = userRepository.findByEmail(changeRoleRequest.getEmail()).orElseThrow(UserNotFoundException::new);
+
+        Role role = roleRepository.findByName("ROLE_" + changeRoleRequest.getRole());
         if (role == null) {
-            throw new UserNotFoundException();
+            throw new RoleNotFoundException();
         }
 
         Set<Role> updatedRoles = new HashSet<>(user.getRoles());
 
         if (changeRoleRequest.getOperation().equals("REMOVE")) {
-            if (role.getName().equals("ROLE_ADMINISTRATOR")) {
-                throw new CustomBadRequestException("Can't remove ADMINISTRATOR role!");
-            }
 
             if (!user.getRoles().contains(role)) {
                 throw new CustomBadRequestException("The user does not have a role!");
+            }
+
+            if (role.getName().equals("ROLE_ADMINISTRATOR")) {
+                throw new CustomBadRequestException("Can't remove ADMINISTRATOR role!");
             }
 
             if (user.getRoles().size() <= 1) {
