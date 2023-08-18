@@ -32,6 +32,66 @@ public class LogService {
         return new ResponseEntity<>(logRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
 
+    public void createUser(String email) {
+        Log log = new Log();
+
+        log.setDate(new Date());
+        log.setAction("CREATE_USER");
+        log.setSubject("Anonymous");
+        log.setObject(email);
+        log.setPath(request.getRequestURI());
+
+        logRepository.save(log);
+    }
+
+    public void changePassword(String email) {
+        Log log = new Log();
+
+        log.setDate(new Date());
+        log.setAction("CHANGE_PASSWORD");
+        log.setSubject(email);
+        log.setObject(email);
+        log.setPath(request.getRequestURI());
+
+        logRepository.save(log);
+    }
+
+    public void grantRole(String adminEmail, String email, String role) {
+        Log log = new Log();
+
+        log.setDate(new Date());
+        log.setAction("GRANT_ROLE");
+        log.setSubject(adminEmail);
+        log.setObject(String.format("Grant role %s to %s", role, email));
+        log.setPath(request.getRequestURI());
+
+        logRepository.save(log);
+    }
+
+    public void removeRole(String adminEmail, String email, String role) {
+        Log log = new Log();
+
+        log.setDate(new Date());
+        log.setAction("REMOVE_ROLE");
+        log.setSubject(adminEmail);
+        log.setObject(String.format("Remove role %s from %s", role, email));
+        log.setPath(request.getRequestURI());
+
+        logRepository.save(log);
+    }
+
+    public void deleteUser(String adminEmail, String email) {
+        Log log = new Log();
+
+        log.setDate(new Date());
+        log.setAction("DELETE_USER");
+        log.setSubject(adminEmail);
+        log.setObject(email);
+        log.setPath(request.getRequestURI());
+
+        logRepository.save(log);
+    }
+
     public void accessDeniedLog(String email, String path) {
         Log log = new Log();
 

@@ -24,13 +24,15 @@ public class UserService  {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LogService logService;
 
     @Autowired
-    public UserService(UserRepository userRepository,
-                       RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository,
+                       PasswordEncoder passwordEncoder, LogService logService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.logService = logService;
     }
 
     private void checkPass(String pass) {
@@ -72,6 +74,7 @@ public class UserService  {
         user.setRoles(roles);
 
         userRepository.save(user);
+        logService.createUser(email);
 
         return new ResponseEntity<>(user.returnUserResponse(), HttpStatus.OK);
     }
@@ -87,6 +90,7 @@ public class UserService  {
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
+        logService.changePassword(user.getEmail());
 
         return new ResponseEntity<>(Map.of("email", userDetails.getUsername(),
                 "status", "The password has been updated successfully"), HttpStatus.OK);

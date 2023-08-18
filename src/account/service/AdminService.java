@@ -42,13 +42,14 @@ public class AdminService {
         return new ResponseEntity<>((result), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> deleteUser(String email) {
+    public ResponseEntity<?> deleteUser(UserDetails userDetails, String email) {
         User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(UserNotFoundException::new);
 
         if (user.getRoles().contains(roleRepository.findByName("ROLE_ADMINISTRATOR"))) {
             throw new CustomBadRequestException("Can't remove ADMINISTRATOR role!");
         }
         userRepository.delete(user);
+        logService.deleteUser(userDetails.getUsername(), user.getEmail());
 
         return new ResponseEntity<>(Map.of("user", email, "status", "Deleted successfully!"), HttpStatus.OK);
     }
@@ -58,7 +59,7 @@ public class AdminService {
         return new ResponseEntity<>(Map.of("status", "Deleted successfully!"), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> changeRole(ChangeRoleRequest changeRoleRequest) {
+    public ResponseEntity<?> changeRole(UserDetails userDetails, ChangeRoleRequest changeRoleRequest) {
 
         User user = userRepository.findByEmailIgnoreCase(changeRoleRequest.getUser()).orElseThrow(UserNotFoundException::new);
 
@@ -80,12 +81,14 @@ public class AdminService {
                 throw new CustomBadRequestException("The user must have at least one role!");
             }
             updatedRoles.remove(role); // remove role
+            logService.removeRole(userDetails.getUsername(), user.getEmail(), changeRoleRequest.getRole());
         } else if (changeRoleRequest.getOperation().equals("GRANT")) {
             if (user.getRoles().contains(roleRepository.findByName("ROLE_ADMINISTRATOR"))
                     || role.getName().equals("ROLE_ADMINISTRATOR")) {
                 throw new CustomBadRequestException("The user cannot combine administrative and business roles!");
             }
             updatedRoles.add(role); // add new role
+            logService.grantRole(userDetails.getUsername(), user.getEmail(), changeRoleRequest.getRole());
         } else {
             throw new CustomBadRequestException("Wrong operation!");
         }

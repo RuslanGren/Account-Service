@@ -27,8 +27,8 @@ public class AdminController {
     }
 
     @DeleteMapping(value = "/user/{userEmail}")
-    public ResponseEntity<?> deleteUser(@PathVariable String userEmail) {
-        return adminService.deleteUser(userEmail);
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String userEmail) {
+        return adminService.deleteUser(userDetails, userEmail);
     }
 
     @DeleteMapping("/user/")
@@ -37,8 +37,9 @@ public class AdminController {
     }
 
     @PutMapping("/user/role")
-    public ResponseEntity<?> changeRole(@RequestBody ChangeRoleRequest changeRoleRequest) {
-        return adminService.changeRole(changeRoleRequest);
+    public ResponseEntity<?> changeRole(@AuthenticationPrincipal UserDetails userDetails,
+                                        @RequestBody ChangeRoleRequest changeRoleRequest) {
+        return adminService.changeRole(userDetails, changeRoleRequest);
     }
 
     @PutMapping("/user/access")
