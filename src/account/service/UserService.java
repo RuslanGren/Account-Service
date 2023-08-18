@@ -1,7 +1,6 @@
 package account.service;
 
 import account.exceptions.CustomBadRequestException;
-import account.exceptions.RoleNotFoundException;
 import account.exceptions.UserNotFoundException;
 import account.models.user.ChangePassRequest;
 import account.models.user.RegisterRequest;
@@ -91,5 +90,12 @@ public class UserService  {
 
         return new ResponseEntity<>(Map.of("email", userDetails.getUsername(),
                 "status", "The password has been updated successfully"), HttpStatus.OK);
+    }
+
+    public void resetFailedAttempts(UserDetails userDetails) {
+        User user = userRepository.findByEmailIgnoreCase(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
+
+        user.setFailedAttempt(0);
+        userRepository.save(user);
     }
 }

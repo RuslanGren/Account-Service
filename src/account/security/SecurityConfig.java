@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/acct/payments").hasAnyRole("ACCOUNTANT")
                         .requestMatchers(HttpMethod.PUT, "/api/acct/payments").hasAnyRole("ACCOUNTANT")
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMINISTRATOR")
+                        .requestMatchers(HttpMethod.GET, "/api/security/events").hasAnyRole("AUDITOR")
                         .requestMatchers(HttpMethod.POST, "/actuator/shutdown").permitAll() // for tests
                         .anyRequest().permitAll())
                 .sessionManagement()

@@ -11,8 +11,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class UserInfo implements UserDetails {
+
     private final User user;
-    public UserInfo(User user){
+
+    public UserInfo(User user) {
         this.user = user;
     }
     @Override

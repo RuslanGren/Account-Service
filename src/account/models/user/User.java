@@ -1,6 +1,5 @@
 package account.models.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -19,8 +18,11 @@ public class User {
 
     private String email;
 
-    @JsonIgnore
     private String password;
+
+    private boolean accountNonLocked;
+
+    private int failedAttempt;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -34,6 +36,22 @@ public class User {
 
     public UserResponse returnUserResponse() {
         return new UserResponse(getId(), getName(), getLastname(), getEmail(), getRoles());
+    }
+
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public int getFailedAttempt() {
+        return failedAttempt;
+    }
+
+    public void setFailedAttempt(int failedAttempt) {
+        this.failedAttempt = failedAttempt;
     }
 
     public long getId() {
