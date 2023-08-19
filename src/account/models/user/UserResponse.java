@@ -1,6 +1,8 @@
 package account.models.user;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,7 +15,7 @@ public class UserResponse {
 
     private String email;
 
-    private Set<String> roles = new HashSet<>();
+    private List<String> roles = new ArrayList<>();
 
     public UserResponse() {
     }
@@ -23,7 +25,7 @@ public class UserResponse {
         this.name = name;
         this.lastname = lastname;
         this.email = email;
-        this.roles = roles.stream().map(Role::getName).collect(Collectors.toSet());
+        this.roles = roles.stream().map(Role::getName).sorted().collect(Collectors.toList());
     }
 
     public long getId() {
@@ -58,11 +60,11 @@ public class UserResponse {
         this.email = email;
     }
 
-    public Set<String> getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<String> roles) {
+    public void setRoles(List<String> roles) {
         this.roles = roles;
     }
 }

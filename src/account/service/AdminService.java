@@ -16,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AdminService {
@@ -115,7 +112,7 @@ public class AdminService {
         }
 
         return new ResponseEntity<>(Map.of(
-                "status", String.format("User %s %s!", request.getUser(), request.getOperation()))
+                "status", String.format("User %s %sed!", request.getUser().toLowerCase(), request.getOperation().toLowerCase()))
                 , HttpStatus.OK);
     }
 

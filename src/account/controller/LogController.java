@@ -16,7 +16,7 @@ public class LogController {
         this.logService = logService;
     }
 
-    @GetMapping("/api/security/events")
+    @GetMapping("/api/security/events/")
     public ResponseEntity<?> getEvents() {
         return logService.getEvents();
     }

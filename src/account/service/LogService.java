@@ -134,7 +134,8 @@ public class LogService {
         logRepository.save(log);
     }
 
-    public void lockUserBruteForceAttack(String email) {
+    public void lockUserBruteForceAttack(User user) {
+        String email = user.getEmail();
         bruteForce(email);
 
         Log log = new Log();
@@ -146,6 +147,9 @@ public class LogService {
         log.setPath(request.getRequestURI());
 
         logRepository.save(log);
+
+        user.setAccountNonLocked(false);
+        userRepository.save(user);
     }
 
     public void lockUserByAdmin(String adminEmail, User user) {
@@ -175,6 +179,8 @@ public class LogService {
         logRepository.save(log);
 
         user.setAccountNonLocked(true);
+        user.setFailedAttempt(0);
         userRepository.save(user);
     }
+
 }

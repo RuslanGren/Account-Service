@@ -1,6 +1,8 @@
 package account.security;
 
+import account.exceptions.UserIsLockedException;
 import account.models.user.User;
+import account.repository.RoleRepository;
 import account.repository.UserRepository;
 import account.service.LogService;
 import account.service.UserService;
@@ -24,37 +26,41 @@ public class AuthenticationEvents {
 
     private final LogService logService;
 
+    private final RoleRepository roleRepository;
+
     @Autowired
-    public AuthenticationEvents(UserService userService, UserRepository userRepository, LogService logService) {
+    public AuthenticationEvents(UserService userService, UserRepository userRepository,
+                                LogService logService, RoleRepository roleRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.logService = logService;
+        this.roleRepository = roleRepository;
     }
 
     @EventListener
     public void onSuccess(AuthenticationSuccessEvent success) {
-        UserDetails userDetails = (UserDetails) success.getAuthentication().getPrincipal();
-        userService.resetFailedAttempts(userDetails);
+        UserDetails details = (UserDetails) success.getAuthentication().getPrincipal();
+
+        userService.resetFailedAttempts(details);
     }
 
     @EventListener
     public void onFailure(AbstractAuthenticationFailureEvent failures) {
-        UserDetails userDetails = (UserDetails) failures.getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
+        String email = (String) failures.getAuthentication().getPrincipal();
 
         Optional<User> userOptional = userRepository.findByEmailIgnoreCase(email);
 
-        userOptional.ifPresent(user -> {
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
             if (!user.isAccountNonLocked()) {
                 return;
             }
             logService.failedAuthenticationByUser(user);
-            if (user.getFailedAttempt() >= AuthenticationEvents.MAX_FAILED_ATTEMPTS) {
-                logService.lockUserBruteForceAttack(email);
+            if (user.getFailedAttempt() >= MAX_FAILED_ATTEMPTS
+                    && !user.getRoles().contains(roleRepository.findByName("ROLE_ADMINISTRATOR"))) {
+                logService.lockUserBruteForceAttack(user);
             }
-        });
-
-        if (userOptional.isEmpty()) {
+        } else {
             logService.failedAuthentication(email);
         }
     }

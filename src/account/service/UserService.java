@@ -15,9 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService  {
@@ -71,6 +69,8 @@ public class UserService  {
         user.setLastname(request.getLastname());
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setAccountNonLocked(true);
+        user.setFailedAttempt(0);
         user.setRoles(roles);
 
         userRepository.save(user);
@@ -98,7 +98,6 @@ public class UserService  {
 
     public void resetFailedAttempts(UserDetails userDetails) {
         User user = userRepository.findByEmailIgnoreCase(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
-
         user.setFailedAttempt(0);
         userRepository.save(user);
     }
