@@ -57,12 +57,16 @@ public class AuthenticationEvents {
             }
             logService.failedAuthenticationByUser(user);
             if (user.getFailedAttempt() >= MAX_FAILED_ATTEMPTS
-                    && !user.getRoles().contains(roleRepository.findByName("ROLE_ADMINISTRATOR"))) {
+                    && !isAdministrative(user)) {
                 logService.lockUserBruteForceAttack(user);
             }
         } else {
             logService.failedAuthentication(email);
         }
+    }
+
+    private static boolean isAdministrative(User user) {
+        return user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMINISTRATOR"));
     }
 
 }
